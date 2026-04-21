@@ -27,7 +27,10 @@ export function initWorld(root) {
     camera.setAttribute("wasd-controls", "enabled: false"); //diable movement in space
 
     const cursor = document.createElement("a-entity");
-    cursor.setAttribute("cursor", "rayOrigin: mouse"); //use mouse cursor for trigger
+    cursor.setAttribute("cursor", {
+        rayOrigin: "mouse",
+        visible: false 
+      });
     cursor.setAttribute("raycaster", "objects: .clickable"); //only hit clickable class
     camera.appendChild(cursor); //follows user view
 
@@ -167,11 +170,10 @@ function showArtifact(art) {
         document.body.appendChild(panel);
     }
 
-    //TODO: artifact panel design
     panel.innerHTML = `
         <h3>${art.title}</h3>
         <p>${art.artist}, ${art.year}</p>
         <p>${art.body}</p>
-        <button onclick="document.getElementById('artifact-panel').remove()">Close</button>
+        <button id="closeArtifact" onclick="document.getElementById('artifact-panel').remove()">Close</button>
     `;
 }

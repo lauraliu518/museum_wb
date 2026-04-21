@@ -1,6 +1,6 @@
 export const locations = {
   A: {
-    imageSrc: "/src/assets/scene_assets/test.jpg",
+    imageSrc: "/src/assets/scene_assets/test-not-correct.jpg",
     //targets: other clickable locations from current location
     links: [
       { target: "B", position: "0 -1.2 -4" },
