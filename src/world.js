@@ -1,7 +1,7 @@
 import { locations } from "./assets/data/locations.js";
 
 //location to start with
-let current = "A";
+let current = "H";
 let skyEl, hotspotContainer, fadeEl;
 
 //cache textures
