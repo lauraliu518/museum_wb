@@ -1,4 +1,5 @@
 import { locations } from "./assets/data/locations.js";
+import { artifacts } from "./assets/data/artifacts.js";
 
 //location to start with
 let current = "H";
@@ -27,10 +28,8 @@ export function initWorld(root) {
     camera.setAttribute("wasd-controls", "enabled: false"); //diable movement in space
 
     const cursor = document.createElement("a-entity");
-    cursor.setAttribute("cursor", {
-        rayOrigin: "mouse",
-        visible: false 
-      });
+    cursor.setAttribute("cursor", {rayOrigin: "mouse"});
+    cursor.setAttribute("visible", false);
     cursor.setAttribute("raycaster", "objects: .clickable"); //only hit clickable class
     camera.appendChild(cursor); //follows user view
 
@@ -49,6 +48,15 @@ export function initWorld(root) {
     preloadNeighbors(locations[current]);
 
     renderLocation();
+}
+
+export function setCurrentLocation(next) {
+    if (!locations[next]) return;
+    current = next;
+
+    if (skyEl && hotspotContainer) {
+        renderLocation();
+    }
 }
 
 //Render each location
@@ -85,18 +93,41 @@ function renderLocation() {
     }
     //render all navigation disks
     for (const link of loc.links){
-        const disk = document.createElement("a-circle");
+        const disk = document.createElement("a-ring");
+        const hitArea = document.createElement("a-circle");
 
         disk.setAttribute("position", link.position);
         disk.setAttribute("rotation", "-90 0 0"); //"flat on the ground"
-        //TODO: change disk design later
-        disk.setAttribute("radius", "0.3");
-        disk.setAttribute("color", "blue");
+        // museum-minimal wayfinding ring
+        disk.setAttribute("radius-inner", "0.24");
+        disk.setAttribute("radius-outer", "0.3");
+        disk.setAttribute("color", "#d9d9d9");
+        disk.setAttribute("opacity", "0.5");
+        disk.setAttribute("material", "shader: flat; side: double");
+        disk.setAttribute("scale", "1 1 1");
 
-        disk.classList.add("clickable");
-        disk.dataset.target = link.target;
-        disk.addEventListener("click", handleDiskClick);
+        // invisible filled circle for easier hit detection
+        hitArea.setAttribute("position", link.position);
+        hitArea.setAttribute("rotation", "-90 0 0");
+        hitArea.setAttribute("radius", "0.34");
+        hitArea.setAttribute("material", "opacity: 0; transparent: true; side: double");
+
+        hitArea.classList.add("clickable");
+        hitArea.dataset.target = link.target;
+        hitArea.addEventListener("click", handleDiskClick);
+        hitArea.addEventListener("mouseenter", () => {
+            disk.setAttribute("color", "#8900e1");
+            disk.setAttribute("opacity", "0.85");
+            disk.setAttribute("scale", "1.08 1.08 1.08");
+        });
+        hitArea.addEventListener("mouseleave", () => {
+            disk.setAttribute("color", "#d9d9d9");
+            disk.setAttribute("opacity", "0.5");
+            disk.setAttribute("scale", "1 1 1");
+        });
+
         hotspotContainer.appendChild(disk);
+        hotspotContainer.appendChild(hitArea);
     }
 
     //artifacts
@@ -106,18 +137,42 @@ function renderLocation() {
         showArtifact(art);
     }
     if (loc.artifacts) {
-        for (const art of loc.artifacts) {
-            const box = document.createElement("a-box");
+        for (const artInstance of loc.artifacts) {
+            //merge artifact content with position
+            const fullArt = {
+                ...artifacts[artInstance.id], //content
+                ...artInstance //position, rotation
+            };
     
-            box.setAttribute("position", art.position);
-            box.setAttribute("rotation", art.rotation || "0 0 0");
-            //TODO: artifact hotspot design
-            box.setAttribute("color", "#8b6914");
+            const tag = document.createElement("a-sphere");
     
-            box.classList.add("clickable");
-            box.dataset.art = JSON.stringify(art);
-            box.addEventListener("click", handleArtifactClick);
-            hotspotContainer.appendChild(box);
+            tag.setAttribute("position", artInstance.position);
+            tag.setAttribute("rotation", artInstance.rotation || "0 0 0");
+    
+            tag.setAttribute("radius", "0.14");
+            tag.setAttribute("color", "#ffffff");
+            tag.setAttribute("opacity", "0.45");
+            tag.setAttribute("material", "shader: flat; transparent: true");
+    
+            tag.classList.add("clickable");
+    
+            tag.dataset.art = JSON.stringify(fullArt);
+    
+            tag.addEventListener("click", handleArtifactClick);
+    
+            tag.addEventListener("mouseenter", () => {
+                tag.setAttribute("scale", "1.2 1.2 1.2");
+                tag.setAttribute("opacity", "0.8");
+                tag.setAttribute("material", "shader: flat; transparent: true");
+            });
+    
+            tag.addEventListener("mouseleave", () => {
+                tag.setAttribute("scale", "1 1 1");
+                tag.setAttribute("opacity", "0.45");
+                tag.setAttribute("material", "shader: flat; transparent: true");
+            });
+    
+            hotspotContainer.appendChild(tag);
         }
     }
 }

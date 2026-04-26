@@ -1,4 +1,4 @@
-import {initWorld} from "./world.js";
+import {initWorld, setCurrentLocation} from "./world.js";
 
 const root = document.getElementById("app");
 
@@ -14,6 +14,13 @@ let pendingSettings = {
 
 let currentAlpha = 0;
 let needsUpdate = true;
+let selectedFloor = "floor6";
+
+const floorMap = {
+    floor6: "H",
+    floor8: "Q",
+    balcony: "L"
+};
 
 //cursor
 const cursor = document.createElement("div");
@@ -81,16 +88,29 @@ function startExperience() {
     <div class="page vr-page">
         <div id="vr-root"></div>
 
-        <div id="hud" class="hud-collapsed">
-            <div id="hud-toggle">Settings</div>
+        <div id="hud-controls">
+            <div id="hud" class="hud-collapsed">
+                <div id="hud-toggle">Settings</div>
 
-            <div id="hud-panel" class="hidden">
-                <h3>Settings</h3>
+                <div id="hud-panel" class="hidden">
+                    <h3>Settings</h3>
 
-                <label>Color Muting</label>
-                <input type="range" min="0" max="100" value="0" id="hudColorSlider"/>
+                    <label>Color Muting</label>
+                    <input type="range" min="0" max="100" value="0" id="hudColorSlider"/>
 
-                <button id="saveSettings">Save</button>
+                    <button id="saveSettings">Save</button>
+                </div>
+            </div>
+
+            <div id="hud-floors" class="hud-collapsed">
+                <div id="hud-floors-toggle">Floors</div>
+
+                <div id="hud-floors-panel" class="hidden">
+                    <h3>Floors</h3>
+                    <button class="floor-option selected" data-floor="floor6">Floor 6</button>
+                    <button class="floor-option" data-floor="floor8">Floor 8</button>
+                    <button class="floor-option" data-floor="balcony">Balcony</button>
+                </div>
             </div>
         </div>
 
@@ -143,9 +163,13 @@ function initHUD() {
     const hud = document.getElementById("hud");
     const toggle = document.getElementById("hud-toggle");
     const panel = document.getElementById("hud-panel");
+    const floorsHud = document.getElementById("hud-floors");
+    const floorsToggle = document.getElementById("hud-floors-toggle");
+    const floorsPanel = document.getElementById("hud-floors-panel");
     const overlay = document.getElementById("hud-overlay");
     const saveBtn = document.getElementById("saveSettings");
     const hudSlider = document.getElementById("hudColorSlider");
+    const floorOptions = document.querySelectorAll(".floor-option");
 
     //initialize slider match current settings
     hudSlider.value = settings.colorMute;
@@ -157,8 +181,8 @@ function initHUD() {
     };
 
     //spotlight hud
-    const updateSpotlight = () => {
-        const rect = panel.getBoundingClientRect();
+    const updateSpotlight = (targetPanel) => {
+        const rect = targetPanel.getBoundingClientRect();
       
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
@@ -169,16 +193,43 @@ function initHUD() {
 
     //initial state
     let expanded = false;
+    let floorsExpanded = false;
     panel.classList.add("hidden");
+    floorsPanel.classList.add("hidden");
     overlay.style.opacity = 0;
     overlay.classList.remove("active");
     hud.classList.remove("hud-expanded");
     hud.classList.add("hud-collapsed");
+    floorsHud.classList.remove("hud-expanded");
+    floorsHud.classList.add("hud-collapsed");
+
+    const closeSettingsPanel = () => {
+        expanded = false;
+        panel.classList.add("hidden");
+        hud.classList.remove("hud-expanded");
+        hud.classList.add("hud-collapsed");
+    };
+
+    const closeFloorsPanel = () => {
+        floorsExpanded = false;
+        floorsPanel.classList.add("hidden");
+        floorsHud.classList.remove("hud-expanded");
+        floorsHud.classList.add("hud-collapsed");
+    };
+
+    const closeAllPanels = () => {
+        closeSettingsPanel();
+        closeFloorsPanel();
+        overlay.style.opacity = 0;
+        overlay.classList.remove("active");
+        disableVRInteraction(false);
+    };
 
     //toggle setting bar open/close
     toggle.onclick = () => {
         if (expanded) return; //if opened, ignore
 
+        closeFloorsPanel();
         expanded = true; //set open
         console.log("[HUD] Opened");
         //show hud
@@ -188,10 +239,47 @@ function initHUD() {
         overlay.style.opacity = 0.3;
         overlay.classList.add("active");
         //add spotlight effect
-        updateSpotlight();
+        updateSpotlight(panel);
         //disable interactions
         disableVRInteraction(true);
     };
+
+    floorsToggle.onclick = () => {
+        if (floorsExpanded) return;
+
+        closeSettingsPanel();
+        floorsExpanded = true;
+        console.log("[HUD] Floors opened");
+        floorsPanel.classList.remove("hidden");
+        floorsHud.classList.add("hud-expanded");
+        floorsHud.classList.remove("hud-collapsed");
+        overlay.style.opacity = 0.3;
+        overlay.classList.add("active");
+        updateSpotlight(floorsPanel);
+        disableVRInteraction(true);
+    };
+
+    const updateSelectedFloorUI = () => {
+        floorOptions.forEach((option) => {
+            option.classList.toggle("selected", option.dataset.floor === selectedFloor);
+        });
+    };
+
+    floorOptions.forEach((option) => {
+        option.onclick = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            selectedFloor = option.dataset.floor;
+            updateSelectedFloorUI();
+
+            const targetLocation = floorMap[selectedFloor];
+            setCurrentLocation(targetLocation);
+            closeAllPanels();
+        };
+    });
+
+    updateSelectedFloorUI();
 
     //save settings
     saveBtn.onclick = (e) => {
@@ -202,15 +290,7 @@ function initHUD() {
         needsUpdate = true;
         console.log("[HUD] Settings applied:", settings);
         //close hud:
-        expanded = false;
-        //hide hud
-        panel.classList.add("hidden");
-        hud.classList.remove("hud-expanded");
-        hud.classList.add("hud-collapsed");
-        overlay.style.opacity = 0;
-        overlay.classList.remove("active");
-        //re-allow interactions
-        disableVRInteraction(false);
+        closeAllPanels();
     };
 }
 

@@ -1,18 +1,80 @@
 // ===== CONFIG =====
 const images = [
-    "gallery6_1.jpg",
-    "gallery6_2.jpg",
-    // "gallery6_3.jpg",
-    // "gallery6_4.jpg",
-    // "gallery6_5.jpg",
-    // "gallery6_6.jpg",
-    // "gallery6_7.jpg",
-    // "gallery6_8.jpg",
-    // "gallery6_9.jpg",
-    // "gallery6_10.jpg",
-    // "gallery6_11.jpg",
-    // "gallery6_12.jpg"
-  ];
+  "gallery1_1.jpg",
+  "gallery1_2.jpg",
+  "gallery1_3.jpg",
+  "gallery1_4.jpg",
+  "gallery1_5.jpg",
+  "gallery1_6.jpg",
+  "gallery1_7.jpg",
+  "gallery1_8.jpg",
+  "gallery1_9.jpg",
+  "gallery1_10.jpg",
+  "gallery2_1.jpg",
+  "gallery2_2.jpg",
+  "gallery2_3.jpg",
+  "gallery2_4.jpg",
+  "gallery3_1.jpg",
+  "gallery3_2.jpg",
+  "gallery3_3.jpg",
+  "gallery3_4.jpg",
+  "gallery3_5.jpg",
+  "gallery3_6.jpg",
+  "gallery3_7.jpg",
+  "gallery3_8.jpg",
+  "gallery3_9.jpg",
+  "gallery3_10.jpg",
+  "gallery4_1.jpg",
+  "gallery4_2.jpg",
+  "gallery4_3.jpg",
+  "gallery4_4.jpg",
+  "gallery5_1.jpg",
+  "gallery5_2.jpg",
+  "gallery5_3.jpg",
+  "gallery5_4.jpg",
+  "gallery5_5.jpg",
+  "gallery6_1.jpg",
+  "gallery6_2.jpg",
+  "repeated.jpg"
+];
+
+// location key mapping from src/assets/data/locations.js (image filename -> location key)
+const locationKeyByImage = {
+  "gallery1_1.jpg": "A",
+  "gallery1_2.jpg": "B",
+  "gallery1_3.jpg": "C",
+  "gallery1_4.jpg": "D",
+  "gallery1_5.jpg": "E",
+  "gallery1_6.jpg": "F",
+  "gallery1_7.jpg": "G",
+  "gallery1_8.jpg": "H",
+  "gallery1_9.jpg": "I",
+  "gallery1_10.jpg": "J",
+  "gallery2_1.jpg": "L",
+  "gallery2_2.jpg": "M",
+  "gallery2_3.jpg": "N",
+  "gallery2_4.jpg": "O",
+  "gallery3_1.jpg": "Q",
+  "gallery3_2.jpg": "R",
+  "gallery3_3.jpg": "S",
+  "gallery3_4.jpg": "T",
+  "gallery3_5.jpg": "U",
+  "gallery3_6.jpg": "V",
+  "gallery3_7.jpg": "W",
+  "gallery3_8.jpg": "X",
+  "gallery3_9.jpg": "Y",
+  "gallery3_10.jpg": "Z",
+  "gallery4_1.jpg": "AC",
+  "gallery4_2.jpg": "AD",
+  "gallery4_3.jpg": "AE",
+  "gallery4_4.jpg": "AF",
+  "gallery5_1.jpg": "AG",
+  "gallery5_2.jpg": "AH",
+  "gallery5_3.jpg": "AI",
+  "gallery5_4.jpg": "AJ",
+  "gallery6_1.jpg": "AL",
+  "gallery6_2.jpg": "AM"
+};
   
   let index = 0;
   
@@ -54,9 +116,13 @@ const images = [
   function getCurrentImage() {
     return images[index];
   }
+
+  function getCurrentLocationKey() {
+    return locationKeyByImage[getCurrentImage()] || "N/A";
+  }
   
   function updateImageLabel() {
-    imageLabel.textContent = `Image: ${getCurrentImage()}`;
+    imageLabel.textContent = `Image: ${getCurrentImage()} | Key: ${getCurrentLocationKey()}`;
   }
   
   function showStatus(msg, color = "white") {
@@ -113,7 +179,10 @@ const images = [
     const point = evt.detail.intersection?.point;
     if (!point) return;
   
-    pendingPoint = `${point.x.toFixed(2)} ${point.y.toFixed(2)} ${point.z.toFixed(2)}`;
+    const converted = convertCoords(point.x, point.y, point.z);
+
+    // store as string 
+    pendingPoint = `${converted.x} ${converted.y} ${converted.z}`;
   
     console.log("Pending point:", pendingPoint);
     showStatus("Point selected", "yellow");
@@ -131,18 +200,23 @@ const images = [
         showStatus("Click first to select a point", "orange");
         return;
       }
-  
+    
       const img = getCurrentImage();
-  
+    
       if (!placements[img]) placements[img] = [];
-  
+    
       placements[img].push(pendingPoint);
-  
+    
+      
+      const converted = convertCoords(pendingPoint);
+    
       console.log(`Saved in ${img}:`, pendingPoint);
+      console.log("Converted:", converted);
+    
       showStatus("Point saved", "lightgreen");
-  
+    
       spawnMarker(pendingPoint);
-  
+    
       pendingPoint = null;
       document.querySelectorAll(".preview").forEach(el => el.remove());
     }
@@ -161,6 +235,7 @@ const images = [
       showStatus("Next scene", "lightblue");
   
       console.log("Switched to:", images[index]);
+      console.log("Location key:", getCurrentLocationKey());
     }
   
     // PREVIOUS IMAGE (p)
@@ -177,12 +252,17 @@ const images = [
       showStatus("Previous scene", "lightblue");
   
       console.log("Switched to:", images[index]);
+      console.log("Location key:", getCurrentLocationKey());
     }
   
     // EXPORT (e)
     if (e.key === "e") {
       console.log("=== EXPORT ===");
       console.log(JSON.stringify(placements, null, 2));
+      console.log("=== IMAGE -> LOCATION KEY (from locations.js) ===");
+      images.forEach((img) => {
+        console.log(`${img}: ${locationKeyByImage[img] || "N/A"}`);
+      });
   
       showStatus("Exported to console", "white");
     }
@@ -197,7 +277,19 @@ const images = [
     }
   
   });
+
+  function convertCoords(x, y, z) {
+    const scale = 0.01;
+  
+    return {
+      x: +(x * scale).toFixed(2),
+      y: +(y * scale).toFixed(2),
+      z: +(z * scale).toFixed(2) // flip if needed
+    };
+  }
+
   
   
   // ===== INIT =====
   updateImageLabel();
+console.log("Current location key:", getCurrentLocationKey());
