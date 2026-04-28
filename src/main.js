@@ -50,11 +50,11 @@ function showSettingsPage() {
     root.innerHTML = `
     <div class="page settings-page">
         <div class="center">
-            <h1>Settings</h2>
-
+            <h1 class="title">Settings</h2>
+            <div class="settings-page-color-muting">
             <label>Color Muting</label>
             <input type="range" min="0" max="100" value="0" id="colorSlider"/>
-
+            </div>
             <p class="note">Adjust before entering experience</p>
 
             <button id="enterBtn">Enter Experience</button>

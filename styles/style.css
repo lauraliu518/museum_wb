@@ -135,11 +135,15 @@ h2 {
 /* =========================================
    SETTINGS PAGE
 ========================================= */
-
+.title{
+  margin-bottom: 50px;
+}
 .settings-page {
   align-items: center;
 }
-
+.settings-page-color-muting{
+  font-size: 30px;
+}
 .settings-content {
   max-width: 420px;
   display: flex;
@@ -150,7 +154,7 @@ h2 {
 .settings-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 50px;
 }
 
 .settings-section-title {
@@ -159,18 +163,18 @@ h2 {
 }
 
 .settings-divider {
-  height: 1px;
+  height: 10px;
   background: #ccc;
 }
 
 .settings-description {
-  font-size: 14px;
+  font-size: 20px;
   color: var(--color-muted);
 }
 
 .settings-page button {
   margin-top: 40px;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
 }
 
@@ -243,9 +247,14 @@ a-scene {
   position: fixed;
   top: 40px;
   left: 40px;
+  height: 50px;
   display: flex;
-  gap: 40px;
+  gap: 28px;
   align-items: flex-start;
+  padding: 10px 0;
+  border-radius: 2px;
+  background: rgba(240, 240, 240, 0.25); 
+  backdrop-filter: blur(6px);
   z-index: 3000;
 }
 
@@ -254,6 +263,7 @@ a-scene {
   top: auto;
   left: auto;
   z-index: 3000;
+  padding: 0 14px;
 }
 
 #hud-floors {
@@ -261,6 +271,7 @@ a-scene {
   top: auto;
   left: auto;
   z-index: 3000;
+  padding: 0 14px;
 }
 
 #hud-toggle {
@@ -317,37 +328,64 @@ a-scene {
 }
 
 #hud-panel {
-  margin-top: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  margin-top: 12px;
+
   display: flex;
   flex-direction: column;
   gap: 24px;
 
   transform: translateY(-10px) scale(0.96);
   opacity: 0;
+  pointer-events: none;
   transition: all 0.25s ease;
-
-  background: transparent;
 }
 
 #hud.hud-expanded #hud-panel {
   transform: translateY(0) scale(1);
+  padding: 10px 14px;
   opacity: 1;
+  pointer-events: auto;
+  border-radius: 2px;
+
+  background: rgba(240, 240, 240, 0.35);
+  backdrop-filter: blur(8px);
 }
 
 #hud-floors-panel {
-  margin-top: 24px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 12px; 
+
   display: flex;
   flex-direction: column;
   gap: 12px;
+
   transform: translateY(-10px) scale(0.96);
   opacity: 0;
+  pointer-events: none;
+
   transition: all 0.25s ease;
-  background: transparent;
 }
 
 #hud-floors.hud-expanded #hud-floors-panel {
   transform: translateY(0) scale(1);
   opacity: 1;
+  padding: 16px 14px;
+  border-radius: 2px;
+
+  background: rgba(240, 240, 240, 0.35);
+  backdrop-filter: blur(8px);
 }
 
 .floor-option {
@@ -468,7 +506,7 @@ a-scene {
 }
 
 #artifact-panel p {
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.5;
   color: #2b2b2b;
   margin: 6px 0;
@@ -480,7 +518,7 @@ a-scene {
 
 #artifact-panel button {
   margin-top: 12px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
 }
 

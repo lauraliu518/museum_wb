@@ -35,4 +35,19 @@ export const artifacts = {
   
     "room2/bigroom/tv_chair": { title: "g6_2b", artist: "Unknown", year: "", body: "" },
     "room2/bigroom/balloon": { title: "g6_2c", artist: "Unknown", year: "", body: "" },
+    "room2/bigroom/floor_paintings":{
+        title: "Untitled",
+        artist: "Johanna Unzueta",
+        body: "These drawings are made on paper using natural pigments. These include indigo, which the artist first encountered in Guatemala, and tints from berries found in a friend's garden during the pandemic. To show both sides of the drawings, she took inspiration from tabletop tent signs used in restaurants."
+    },
+    "room2/bigroom/wall_old":{
+        title: "Untitled",
+        artist: "Johanna Unzueta",
+        body: "These drawings are made on paper using natural pigments. These include indigo, which the artist first encountered in Guatemala, and tints from berries found in a friend's garden during the pandemic. To show both sides of the drawings, she took inspiration from tabletop tent signs used in restaurants."
+    },
+    "room2/bigroom/wall_frames":{
+        title: "Untitled",
+        artist: "Johanna Unzueta",
+        body: "These drawings are made on paper using natural pigments. These include indigo, which the artist first encountered in Guatemala, and tints from berries found in a friend's garden during the pandemic. To show both sides of the drawings, she took inspiration from tabletop tent signs used in restaurants."
+    }
   };
