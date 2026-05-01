@@ -415,6 +415,7 @@ a-scene {
 
   background: rgba(240, 240, 240, 0.35);
   backdrop-filter: blur(8px);
+  pointer-events: auto;
 }
 
 .floor-option {
@@ -485,7 +486,7 @@ a-scene {
 
 .overlay.active {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none;
   backdrop-filter: blur(6px);
 }
 

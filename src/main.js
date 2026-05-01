@@ -11,7 +11,8 @@ const UI_TEXT = {
         flrs:"Floors",
         flr: "Floor",
         terrace:"Terrace",
-        save: "Save" 
+        save: "Save",
+        hud_lang_title: "Español" 
     },
     es: {
         title: "Whitney Biennial VR",
@@ -23,7 +24,8 @@ const UI_TEXT = {
         flrs:"Pisos",
         flr: "Piso",
         terrace:"Terraza",
-        save: "Guardar"
+        save: "Guardar",
+        hud_lang_title: "English" 
     }
 };
 
@@ -32,7 +34,7 @@ const root = document.getElementById("app");
 //Global settings
 const settings = {
     colorMute: 0, // 0–100
-    language: "en" //"en"/"es"
+    language: localStorage.getItem("lang") || "en" //"en"/"es"
 };
 
 //temp UI state
@@ -70,12 +72,13 @@ function showStartPage() {
         <div class="layout">    
             <button id="langBtn" class="lang-btn">EN/ES</button>
             <div class="center">
-                <h1>${UI_TEXT[lang].title}</h1>
-                <button id="startBtn" class="btn-outline">${UI_TEXT[lang].start}</button>
+                <h1 id="start-title"></h1>
+                <button id="startBtn" class="btn-outline"></button>
             </div>
         </div>
     </div>
     `;
+    updateText();
     document.getElementById("startBtn").onclick = showSettingsPage;
     document.getElementById("langBtn").onclick = () => {
         let newLang;
@@ -89,10 +92,13 @@ function showStartPage() {
         settings.language = newLang;
         pendingSettings.language = newLang;
 
+        //update localstorage to allow world.js access
+        localStorage.setItem("lang", settings.language);
+
         console.log("[LANGUAGE] Switched to:", newLang);
 
         //re-render 
-        showStartPage();
+        updateText();
     };
 }
 
@@ -104,18 +110,19 @@ function showSettingsPage() {
         <div class="layout">
             <button id="langBtn" class="lang-btn">EN/ES</button>
             <div class="center">
-                <h1 class="title">${UI_TEXT[lang].settings}</h2>
+                <h1 class="title" id="settings-title"></h1>
                 <div class="settings-page-color-muting">
-                <label>${UI_TEXT[lang].cm_title}</label>
-                <input type="range" min="0" max="100" value="0" id="colorSlider"/>
+                    <label id="cm-title"></label>
+                    <input type="range" min="0" max="100" value="0" id="colorSlider"/>
                 </div>
-                <p class="note">${UI_TEXT[lang].cm_desc}</p>
+                <p class="note" id="cm-desc"></p>
 
-                <button id="enterBtn">${UI_TEXT[lang].enter}</button>
+                <button id="enterBtn"></button>
             </div>
         </div>
     </div>
     `;
+    updateText();
     const slider = document.getElementById("colorSlider");
     const enterBtn = document.getElementById("enterBtn");
     console.log("[SETTINGS PAGE] Loaded");
@@ -149,10 +156,12 @@ function showSettingsPage() {
         settings.language = newLang;
         pendingSettings.language = newLang;
 
+        localStorage.setItem("lang", settings.language);
+
         console.log("[LANGUAGE] Switched to:", newLang);
 
         //re-render 
-        showSettingsPage();
+        updateText();
     };
 }
 
@@ -165,26 +174,28 @@ function startExperience() {
 
         <div id="hud-controls">
             <div id="hud" class="hud-collapsed">
-                <div id="hud-toggle">${UI_TEXT[lang].settings}</div>
+                <div id="hud-toggle"></div>
 
                 <div id="hud-panel" class="hidden">
-                    <h3>${UI_TEXT[lang].settings}</h3>
+                    <h3 id="hud-settings-title"></h3>
+                    <label id="hud-cm-title"></label>
 
-                    <label>${UI_TEXT[lang].cm_title}</label>
                     <input type="range" min="0" max="100" value="0" id="hudColorSlider"/>
 
-                    <button id="saveSettings">${UI_TEXT[lang].save}</button>
+                    <label id="hud-lang-title"></label>
+
+                    <button id="saveSettings"></button>
                 </div>
             </div>
 
             <div id="hud-floors" class="hud-collapsed">
-                <div id="hud-floors-toggle">${UI_TEXT[lang].flrs}</div>
+                <div id="hud-floors-toggle"></div>
 
                 <div id="hud-floors-panel" class="hidden">
-                    <h3>${UI_TEXT[lang].flrs}</h3>
-                    <button class="floor-option selected" data-floor="floor6">${UI_TEXT[lang].flr} 6</button>
-                    <button class="floor-option" data-floor="floor8">${UI_TEXT[lang].flr} 8</button>
-                    <button class="floor-option" data-floor="balcony">${UI_TEXT[lang].terrace}</button>
+                    <h3 id="hud-floors-title"></h3>
+                    <button class="floor-option selected" data-floor="floor6"></button>
+                    <button class="floor-option" data-floor="floor8"></button>
+                    <button class="floor-option" data-floor="balcony"></button>
                 </div>
             </div>
         </div>
@@ -192,9 +203,29 @@ function startExperience() {
         <div id="hud-overlay" class="overlay"></div>
     </div>
     `;
+    updateText();
     initWorld(document.getElementById("vr-root"));
     initP5Overlay(settings);
     initHUD();
+    document.getElementById("hud-lang-title").onclick = () => {
+        let newLang;
+        if(settings.language === "en"){
+            newLang = "es";
+        }else{
+            newLang = "en";
+        }
+
+        //update both states
+        settings.language = newLang;
+        pendingSettings.language = newLang;
+
+        localStorage.setItem("lang", settings.language);
+
+        console.log("[LANGUAGE] Switched to:", newLang);
+
+        //re-render 
+        updateText();
+    };
 }
 
 /* PAGE HELPERS */
@@ -344,7 +375,7 @@ function initHUD() {
         option.onclick = (e) => {
             e.stopPropagation();
             e.preventDefault();
-
+            console.log(option.dataset.floor);
             selectedFloor = option.dataset.floor;
             updateSelectedFloorUI();
 
@@ -381,6 +412,44 @@ function disableVRInteraction(disabled) {
         cursor.setAttribute("raycaster", { objects: "none" });
     } else {
         cursor.setAttribute("raycaster", { objects: ".clickable" });
+    }
+}
+
+//update text content, avoid rerender whole structure
+function updateText() {
+    const lang = settings.language;
+
+    //start page
+    if (document.getElementById("start-title")) {
+        document.getElementById("start-title").textContent = UI_TEXT[lang].title;
+        document.getElementById("startBtn").textContent = UI_TEXT[lang].start;
+    }
+
+    //settings
+    if (document.getElementById("settings-title")) {
+        document.getElementById("settings-title").textContent = UI_TEXT[lang].settings;
+        document.getElementById("cm-title").textContent = UI_TEXT[lang].cm_title;
+        document.getElementById("cm-desc").textContent = UI_TEXT[lang].cm_desc;
+        document.getElementById("enterBtn").textContent = UI_TEXT[lang].enter;
+    }
+
+    //hud section
+    if (document.getElementById("hud-toggle")) {
+        document.getElementById("hud-toggle").textContent = UI_TEXT[lang].settings;
+        document.getElementById("hud-settings-title").textContent = UI_TEXT[lang].settings;
+        document.getElementById("hud-cm-title").textContent = UI_TEXT[lang].cm_title;
+        document.getElementById("hud-lang-title").textContent = UI_TEXT[lang].hud_lang_title;
+        document.getElementById("saveSettings").textContent = UI_TEXT[lang].save;
+
+        document.getElementById("hud-floors-toggle").textContent = UI_TEXT[lang].flrs;
+        document.getElementById("hud-floors-title").textContent = UI_TEXT[lang].flrs;
+
+        const floorBtns = document.querySelectorAll(".floor-option");
+        if (floorBtns.length === 3) {
+            floorBtns[0].textContent = `${UI_TEXT[lang].flr} 6`;
+            floorBtns[1].textContent = `${UI_TEXT[lang].flr} 8`;
+            floorBtns[2].textContent = UI_TEXT[lang].terrace;
+        }
     }
 }
 

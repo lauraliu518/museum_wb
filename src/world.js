@@ -217,6 +217,14 @@ function changeLocation(next) {
 
 //Handle when clicked on artifact hotspot, show information
 function showArtifact(art) {
+    //always grab newest language setting
+    const lang = localStorage.getItem("lang") || "en";
+
+    let closeBtnText = "Close";
+    if(lang == "es"){
+        closeBtnText = "Cerrar";
+    }
+
     let panel = document.getElementById("artifact-panel");
 
     if (!panel) {
@@ -226,9 +234,9 @@ function showArtifact(art) {
     }
 
     panel.innerHTML = `
-        <h3>${art.title}</h3>
+        <h3>${art.title[lang]}</h3>
         <p>${art.artist}, ${art.year}</p>
-        <p>${art.body}</p>
-        <button id="closeArtifact" onclick="document.getElementById('artifact-panel').remove()">Close</button>
+        <p>${art.body[lang]}</p>
+        <button id="closeArtifact" onclick="document.getElementById('artifact-panel').remove()">${closeBtnText}</button>
     `;
 }

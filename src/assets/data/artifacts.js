@@ -1,15 +1,15 @@
 export const artifacts = {
-    "biennial-sample-01": {
-      title: "biennial-sample-01",
-      artist: "Unknown",
-      year: "",
-      body: "",
-    },
     "room1/dollroom": { 
-        title: "Everything wants to kill you and you should be afraid", 
+        title: {
+            en: "Everything wants to kill you and you should be afraid",
+            es: "Todo te quiere matar y deberías tener miedo"
+        }, 
         artist: "Precious Okoyomon", 
         year: "2026", 
-        body: "In this installation, you will see hanging toys with bird wings, giving them an angel-like appearance. The figures hang from nooses, referencing the history of racial violence in the United States. For the artist, these forms hold contradictions\:death and eternal life, flight and gravity, joy and grief." 
+        body: {
+            en:"In this installation, you will see hanging toys with bird wings, giving them an angel-like appearance. The figures hang from nooses, referencing the history of racial violence in the United States. For the artist, these forms hold contradictions\:death and eternal life, flight and gravity, joy and grief." ,
+            es: "En esta instalación, verás juguetes con alas de ave, dándoles una apariencia de ángel. Las figuras cuelgan de sogas, en referencia a la historia de violencia racial en Estados Unidos. Para Okoyomon, estas formas contienen contradicciones: muerte y vida eterna, vuelo y gravedad, alegría y duelo"
+        }
     },
     "room3/balcony": { 
         title: "Monument (Altadena)", 
