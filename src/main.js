@@ -1,15 +1,44 @@
 import {initWorld, setCurrentLocation} from "./world.js";
 
+const UI_TEXT = {
+    en: {
+        title: "Whitney Biennial VR",
+        start: "Start Exploring",
+        settings:"Settings",
+        cm_title:"Color Muting",
+        cm_desc:"Adjust before entering experience",
+        enter:"Enter Experience",
+        flrs:"Floors",
+        flr: "Floor",
+        terrace:"Terrace",
+        save: "Save" 
+    },
+    es: {
+        title: "Whitney Biennial VR",
+        start: "Comenzar a explorar",
+        settings:"Ajustes",
+        cm_title:"Preferencias de color",
+        cm_desc:"Ajuste antes de entrar a la experiencia",
+        enter:"Entrar",
+        flrs:"Pisos",
+        flr: "Piso",
+        terrace:"Terraza",
+        save: "Guardar"
+    }
+};
+
 const root = document.getElementById("app");
 
 //Global settings
 const settings = {
-    colorMute: 0 // 0–100
+    colorMute: 0, // 0–100
+    language: "en" //"en"/"es"
 };
 
 //temp UI state
 let pendingSettings = {
-    colorMute: 0
+    colorMute: 0,
+    language: "en"
 };
 
 let currentAlpha = 0;
@@ -34,30 +63,56 @@ document.addEventListener("mousemove", (e) => {
 
 /* START PAGE */
 function showStartPage() {
+    const lang = settings.language;
+
     root.innerHTML = `
     <div class="page start-page">
-        <div class="center">
-            <h1>Whitney Biennial VR</h1>
-            <button id="startBtn" class="btn-outline">Start Exploring</button>
+        <div class="layout">    
+            <button id="langBtn" class="lang-btn">EN/ES</button>
+            <div class="center">
+                <h1>${UI_TEXT[lang].title}</h1>
+                <button id="startBtn" class="btn-outline">${UI_TEXT[lang].start}</button>
+            </div>
         </div>
     </div>
     `;
     document.getElementById("startBtn").onclick = showSettingsPage;
+    document.getElementById("langBtn").onclick = () => {
+        let newLang;
+        if(settings.language === "en"){
+            newLang = "es";
+        }else{
+            newLang = "en";
+        }
+
+        //update both states
+        settings.language = newLang;
+        pendingSettings.language = newLang;
+
+        console.log("[LANGUAGE] Switched to:", newLang);
+
+        //re-render 
+        showStartPage();
+    };
 }
 
 /* SETTINGS PAGE */
 function showSettingsPage() {
+    const lang = settings.language;
     root.innerHTML = `
     <div class="page settings-page">
-        <div class="center">
-            <h1 class="title">Settings</h2>
-            <div class="settings-page-color-muting">
-            <label>Color Muting</label>
-            <input type="range" min="0" max="100" value="0" id="colorSlider"/>
-            </div>
-            <p class="note">Adjust before entering experience</p>
+        <div class="layout">
+            <button id="langBtn" class="lang-btn">EN/ES</button>
+            <div class="center">
+                <h1 class="title">${UI_TEXT[lang].settings}</h2>
+                <div class="settings-page-color-muting">
+                <label>${UI_TEXT[lang].cm_title}</label>
+                <input type="range" min="0" max="100" value="0" id="colorSlider"/>
+                </div>
+                <p class="note">${UI_TEXT[lang].cm_desc}</p>
 
-            <button id="enterBtn">Enter Experience</button>
+                <button id="enterBtn">${UI_TEXT[lang].enter}</button>
+            </div>
         </div>
     </div>
     `;
@@ -80,36 +135,56 @@ function showSettingsPage() {
 
         startExperience();
     };
+
+    //language switch
+    document.getElementById("langBtn").onclick = () => {
+        let newLang;
+        if(settings.language === "en"){
+            newLang = "es";
+        }else{
+            newLang = "en";
+        }
+
+        //update both states
+        settings.language = newLang;
+        pendingSettings.language = newLang;
+
+        console.log("[LANGUAGE] Switched to:", newLang);
+
+        //re-render 
+        showSettingsPage();
+    };
 }
 
 /* VR EXPERIENCE PAGE */
 function startExperience() {
+    const lang = settings.language;
     root.innerHTML = `
     <div class="page vr-page">
         <div id="vr-root"></div>
 
         <div id="hud-controls">
             <div id="hud" class="hud-collapsed">
-                <div id="hud-toggle">Settings</div>
+                <div id="hud-toggle">${UI_TEXT[lang].settings}</div>
 
                 <div id="hud-panel" class="hidden">
-                    <h3>Settings</h3>
+                    <h3>${UI_TEXT[lang].settings}</h3>
 
-                    <label>Color Muting</label>
+                    <label>${UI_TEXT[lang].cm_title}</label>
                     <input type="range" min="0" max="100" value="0" id="hudColorSlider"/>
 
-                    <button id="saveSettings">Save</button>
+                    <button id="saveSettings">${UI_TEXT[lang].save}</button>
                 </div>
             </div>
 
             <div id="hud-floors" class="hud-collapsed">
-                <div id="hud-floors-toggle">Floors</div>
+                <div id="hud-floors-toggle">${UI_TEXT[lang].flrs}</div>
 
                 <div id="hud-floors-panel" class="hidden">
-                    <h3>Floors</h3>
-                    <button class="floor-option selected" data-floor="floor6">Floor 6</button>
-                    <button class="floor-option" data-floor="floor8">Floor 8</button>
-                    <button class="floor-option" data-floor="balcony">Balcony</button>
+                    <h3>${UI_TEXT[lang].flrs}</h3>
+                    <button class="floor-option selected" data-floor="floor6">${UI_TEXT[lang].flr} 6</button>
+                    <button class="floor-option" data-floor="floor8">${UI_TEXT[lang].flr} 8</button>
+                    <button class="floor-option" data-floor="balcony">${UI_TEXT[lang].terrace}</button>
                 </div>
             </div>
         </div>

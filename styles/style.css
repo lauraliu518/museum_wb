@@ -55,6 +55,7 @@ body {
   padding-right: clamp(20px, 6vw, 80px);
 }
 
+
 /* =========================================
    TYPOGRAPHY
 ========================================= */
@@ -88,6 +89,34 @@ h2 {
   align-items: center;
 }
 
+.lang-btn {
+  margin-top:0px;
+  all: unset;
+  position: fixed;  
+  top: 40px;
+  right: 40px;
+
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-text);
+}
+
+.lang-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 1px;
+  background: var(--color-text);
+  transition: width 0.2s;
+}
+
+.lang-btn:hover::after {
+  width: 100%;
+}
+
 .start-content {
   max-width: 520px;
   display: flex;
@@ -109,7 +138,7 @@ h2 {
   font-weight: 700;
 }
 
-.start-page button::before {
+#startBtn::before {
   content: "→ ";
 }
 
@@ -172,13 +201,13 @@ h2 {
   color: var(--color-muted);
 }
 
-.settings-page button {
+#enterBtn {
   margin-top: 40px;
   font-size: 30px;
   font-weight: 700;
 }
 
-.settings-page button::before {
+#enterBtn::before {
   content: "→ ";
 }
 
