@@ -95,8 +95,6 @@ function showStartPage() {
         //update localstorage to allow world.js access
         localStorage.setItem("lang", settings.language);
 
-        console.log("[LANGUAGE] Switched to:", newLang);
-
         //re-render 
         updateText();
     };
