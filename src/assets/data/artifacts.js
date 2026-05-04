@@ -116,6 +116,7 @@ export const artifacts = {
             es: "Sin título"
         },
         artist: "Johanna Unzueta",
+        year: "Unknown",
         body: {
             en: "These drawings are made on paper using natural pigments. These include indigo, which the artist first encountered in Guatemala, and tints from berries found in a friend's garden during the pandemic. To show both sides of the drawings, she took inspiration from tabletop tent signs used in restaurants.",
             es: "Estos dibujos están hechos en papel con pigmentos naturales. Estos incluyen índigo, los cuales la artista conoció en Guatemala, y tintes de moras encontradas en el jardín de una amiga durante la pandemia. Para mostrar ambos lados de los dibujos, se inspiró en los letreros de mesa de los restaurantes."

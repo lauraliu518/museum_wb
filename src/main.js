@@ -48,8 +48,8 @@ let needsUpdate = true;
 let selectedFloor = "floor6";
 
 const floorMap = {
-    floor6: "H",
-    floor8: "Q",
+    floor8: "H",
+    floor6: "Q",
     balcony: "L"
 };
 
