@@ -162,7 +162,7 @@ export const locations = {
     artifacts: [
       { id: "room2/bigroom/wall_frames", position: "4.76 0.03 -1.52", rotation: "0 0 0" },
       { id: "room2/bigroom/tapestry", position: "-1.48 -1.78 4.42", rotation: "0 0 0" },
-      { id: "room2/bigroom/media_small", position: "-3.07 0.17 -3.93", rotation: "0 0 0" }
+      { id: "room2/bigroom/media_small", position: "-0.63 -0.16 -4.95", rotation: "0 0 0" }
     ]
   },
 
@@ -174,7 +174,7 @@ export const locations = {
       { target: "AC", position: "4.15 -0.83 -2.63" }
     ],
     artifacts: [
-      { id: "room2/bigroom/colorful_doll", position: "-4.14 0.40 -2.76", rotation: "0 0 0" },
+      { id: "room2/bigroom/colorful_doll", position: "-2.71 0.89 -4.1", rotation: "0 0 0" },
       { id: "room2/bigroom/tapestry", position: "4.51 -1.49 1.55", rotation: "0 0 0" },
       { id: "room2/bigroom/wall_frames", position: "4.69 -0.24 -1.67", rotation: "0 0 0" }
 
@@ -239,7 +239,7 @@ export const locations = {
       { target: "AC", position: "1.081 -0.61 4.83" }
     ],
     artifacts: [
-      { id: "room2/bigroom/tapestry", position: "4.54 0.48 2.02", rotation: "0 0 0" }
+      { id: "room2/bigroom/tapestry", position: "4.41 -1.6 1.71", rotation: "0 0 0" }
     ]
   },
 
@@ -250,7 +250,7 @@ export const locations = {
       { target: "Z", position: "4.87 -0.90 -0.62" }
     ],
     artifacts: [
-      { id: "room2/bigroom/media_small", position: "4.96 0.01 -0.60", rotation: "0 0 0" },
+      { id: "room2/bigroom/media_small", position: "4.96 -0.32 0.4", rotation: "0 0 0" },
       { id: "room2/bigroom/tapestry", position: "2.35 -2.05 -3.9", rotation: "0 0 0" }
     ]
   },
@@ -275,7 +275,7 @@ export const locations = {
       { target: "Q", position: "4.73 -0.91 -1.32" }
     ],
     artifacts: [
-      { id: "room2/bigroom/open_media", position: "3.59 -0.17 -3.47", rotation: "0 0 0" },
+      { id: "room2/bigroom/open_media", position: "4.46 -0.92 -2.05", rotation: "0 0 0" },
       { id: "room2/bigroom/floor_paintings", position: "-4.12 0.1 2.82", rotation: "0 0 0" }
     ]
   },
@@ -291,7 +291,7 @@ export const locations = {
       { id: "room2/bigroom/media_big", position: "-0.90 -0.07 4.91", rotation: "0 0 0" },
       { id: "room2/bigroom/open_media", position: "4.54 -0.2 2.05", rotation: "0 0 0" },
       { id: "room2/bigroom/floor_paintings", position: "-4.45 -1.38 -1.81", rotation: "0 0 0" },
-      { id: "room2/bigroom/trunk", position: "-4.09 0.24 2.85", rotation: "0 0 0" }
+      { id: "room2/bigroom/trunk", position: "-4.53 0.28 2.07", rotation: "0 0 0" }
     ]
   },
 
@@ -389,7 +389,7 @@ export const locations = {
     ],
     artifacts: [
       { id: "room2/bigroom/tv_chair", position: "-4.33 0.28 -2.46", rotation: "0 0 0" },
-      { id: "room2/bigroom/balloon", position: "4.43 -0.22 2.29", rotation: "0 0 0" }
+      { id: "room2/bigroom/balloon", position: "3.3 -0.13 3.74", rotation: "0 0 0" }
     ]
   }
 
